@@ -1,0 +1,12 @@
+{
+    "name": "sp2013-markdown-editor",
+    "version": "1.0.0",
+    "homepage": "https://github.com/habaneroconsulting/sp2013-markdown-editor",
+    "description": "A Markdown editor to replace the rich text editor for SharePoint 2013.",
+    "main": "index.html",
+    "license": "MIT",
+    "private": true,
+    "dependencies": {
+        "marked": "~0.3"
+    }
+}
