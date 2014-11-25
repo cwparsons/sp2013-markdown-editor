@@ -27,3 +27,7 @@ source/vendor
 
 # Users Environment Variables
 .lock-wscript
+
+# Build
+build
+production
