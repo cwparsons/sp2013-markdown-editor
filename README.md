@@ -27,7 +27,7 @@ If you have a bug, or a feature request, please post in the [issue tracker](http
 
 2. Install Grunt CLI, bower, bower-installer.
 
-        npm -g install grunt-cli bower
+        npm -g install grunt-cli bower bower-install
 
 3. Run `npm install` from command line at root project folder
 

@@ -1,12 +1,18 @@
 {
-    "name": "sp2013-markdown-editor",
-    "version": "0.0.1",
-    "homepage": "https://github.com/habaneroconsulting/sp2013-markdown-editor",
-    "description": "A Markdown editor to replace the rich text editor for SharePoint 2013.",
-    "main": "index.html",
-    "license": "MIT",
-    "private": true,
-    "dependencies": {
-        "marked": "~0.3"
+  "name": "sp2013-markdown-editor",
+  "version": "0.0.1",
+  "homepage": "https://github.com/habaneroconsulting/sp2013-markdown-editor",
+  "description": "A Markdown editor to replace the rich text editor for SharePoint 2013.",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "marked": "~0.3.2"
+  },
+  "install": {
+    "path": "source/vendor",
+    "sources": {
+      "marked": "bower_components/marked/lib/marked.js"
     }
+  }
 }

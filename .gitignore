@@ -31,3 +31,6 @@ source/vendor
 # Build
 build
 production
+
+# Bower
+bower_components

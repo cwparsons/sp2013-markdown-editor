@@ -19,7 +19,7 @@ module.exports = function(grunt) {
         dirs: {
             build: 'build',
             source: 'source',
-            tmp: '.tmp',
+            tmp: '.grunt',
             vendor: '<%= dirs.source %>/vendor'
         },
 
@@ -67,14 +67,14 @@ module.exports = function(grunt) {
                         cwd: '<%= dirs.source %>',
                         src: [
                             '**/*.js',
-                            '!vendor/**/*.js'
+                            '!**/*.min.js'
                         ],
                         dest: '<%= dirs.tmp %>/',
                         ext: '.min.js'
                     }
                 ],
                 options: {
-                    preserveComments: 'some'
+                    preserveComments: require('uglify-save-license')
                 }
             }
         },
@@ -83,14 +83,23 @@ module.exports = function(grunt) {
             source: {
                 files: {
                     '<%= dirs.build %>/sp2013-markdown-editor.min.js': [
-                        '<%= dirs.vendor %>/marked/lib/marked.js',
-                        '<%= dirs.tmp %>/editor.min.js'
+                        '<%= dirs.tmp %>/*.js',
+                        '<%= dirs.tmp %>/vendor/**/*.js'
                     ]
                 },
                 options: {
-                    banner: '/*!\r\n * sp2013-markdown-editor.min.js\r\n * Habanero Consulting Group\r\n * Licensed under MIT \r\n */\r\n\r\n',
+                    banner: '/*!\r\n * sp2013-markdown-editor.min.js\r\n * Habanero Consulting Group\r\n * Licensed under MIT \r\n */\r\n',
                     separator: '\r\n\r\n'
                 }
+            }
+        },
+
+        shell: {
+            bower: {
+                options: {
+                    stdout: true
+                },
+                command: 'bower-installer'
             }
         },
 
