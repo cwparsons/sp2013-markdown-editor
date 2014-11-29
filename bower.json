@@ -7,11 +7,14 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "marked": "~0.3.2"
+    "marked": "~0.3.2",
+    "to-markdown": "~0.0.2"
   },
   "install": {
     "path": "source/vendor",
     "sources": {
+      "he": "bower_components/he/he.js",
+      "to-markdown": "bower_components/to-markdown/src/to-markdown.js",
       "marked": "bower_components/marked/lib/marked.js"
     }
   }
