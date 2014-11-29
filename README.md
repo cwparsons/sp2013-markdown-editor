@@ -1,13 +1,13 @@
-Markdown Editor for SharePoint 2013
-======================
+# Markdown Editor for SharePoint 2013
 
 A Markdown editor to replace the rich text editor for SharePoint 2013.
+
 
 ## Getting Started
 
 1. [Download the latest release of the script](https://github.com/habaneroconsulting/sp2013-markdown-editor/releases/latest).
 
-2. Upload the JavaScript file to your `Style Library`.
+2. Upload the JavaScript file to your `Style Library/Scripts`.
 
 3. Edit your masterpage and add a reference to the new file. For example:
 
@@ -17,21 +17,26 @@ A Markdown editor to replace the rich text editor for SharePoint 2013.
 
 5. Go back to your portal and try it out.
 
+
 ## Support
 
 If you have a bug, or a feature request, please post in the [issue tracker](https://github.com/habaneroconsulting/sp2013-markdown-editor/issues).
+
 
 ## Build Instructions
 
 1. Install [NodeJS](http://nodejs.org/)
 
-2. Install Grunt CLI, bower, bower-installer.
+2. Install Grunt CLI, Bower, and bower-installer using NPM
 
-        npm -g install grunt-cli bower bower-install
+        npm -g install grunt-cli bower bower-installer
 
 3. Run `npm install` from command line at root project folder
 
-4. Use `grunt build` to build, minify and concatenate the vendor and source files
+4. Run `grunt bower` to download the vendor files using Bower, and copy them into the correct folder
+
+5. Run `grunt build` to build, minify and concatenate the vendor and source files
+
 
 ## License
 

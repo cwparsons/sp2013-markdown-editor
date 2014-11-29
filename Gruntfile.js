@@ -1,7 +1,7 @@
 /*!
  * Gruntfile for SP2013 Markdown Editor
- * Christopher Parsons <cparsons@habaneroconsulting.com>
- * Habanero Consulting Group - Licensed under MIT
+ * Habanero Consulting Group
+ * Licensed under MIT
  */
 
 module.exports = function(grunt) {
@@ -88,7 +88,7 @@ module.exports = function(grunt) {
                     ]
                 },
                 options: {
-                    banner: '/*!\r\n * sp2013-markdown-editor.min.js\r\n * Habanero Consulting Group\r\n * Licensed under MIT \r\n */\r\n',
+                    banner: '/*!\r\n * sp2013-markdown-editor.min.js\r\n * Habanero Consulting Group\r\n * Licensed under MIT\r\n */\r\n',
                     separator: '\r\n\r\n'
                 }
             }
