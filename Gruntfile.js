@@ -34,6 +34,38 @@ module.exports = function(grunt) {
             temp: '<%= dirs.tmp %>'
         },
 
+        cssmin: {
+            build: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= dirs.source %>',
+                        src: [
+                            '**/*.css'
+                        ],
+                        dest: '<%= dirs.tmp %>/',
+                        ext: '.css'
+                    }
+                ]
+            }
+        },
+
+        css2js: {
+            build: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= dirs.tmp %>',
+                        src: [
+                            '**/*.css'
+                        ],
+                        dest: '<%= dirs.tmp %>/',
+                        ext: '-css.js'
+                    }
+                ]
+            }
+        },
+
         jshint: {
             source: [
                 '<%= dirs.source %>/*.js'
@@ -60,8 +92,17 @@ module.exports = function(grunt) {
         },
 
         uglify: {
-            plugin: {
+            build: {
                 files: [
+                    {
+                        expand: true,
+                        cwd: '<%= dirs.tmp %>',
+                        src: [
+                            '**/*.js'
+                        ],
+                        dest: '<%= dirs.tmp %>/',
+                        ext: '.js'
+                    },
                     {
                         expand: true,
                         cwd: '<%= dirs.source %>',
@@ -70,7 +111,7 @@ module.exports = function(grunt) {
                             '!**/*.min.js'
                         ],
                         dest: '<%= dirs.tmp %>/',
-                        ext: '.min.js'
+                        ext: '.js'
                     }
                 ],
                 options: {
@@ -122,7 +163,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('build', [
-        'clean', 'jshint', 'uglify', 'concat', 'clean:temp'
+        'clean', 'jshint', 'cssmin', 'css2js', 'uglify', 'concat', 'clean:temp'
     ]);
 
     grunt.registerTask('serve', [

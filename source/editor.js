@@ -30,93 +30,6 @@
         elements.field.appendChild(elements.editor);
     }
 
-    // Add our button and editor styles via JavaScript to reduce file
-    // dependencies and ease overall installation.
-    function appendStyles() {
-        var style = document.createElement('style');
-
-        style.innerHTML =
-            '.' + classes.prefix + '{' +
-                'position: relative;' +
-            '}' +
-
-            // Hide the rich text area on activation
-            '.' + classes.active + ' .ms-formfieldvaluecontainer {' +
-                'display: none;' +
-            '}' +
-
-            '.' + classes.prefix + ' .ms-formfieldlabel:after {' +
-                'content: " (Rich Text)";' +
-            '}' +
-
-            '.' + classes.active + ' .ms-formfieldlabel:after {' +
-                'content: " (Markdown)";' +
-            '}' +
-
-            '.' + classes.prefix + '-textarea-container {' +
-                'border-style: solid;' +
-                'border-width: 1px;' +
-                'display: none;' +
-                'margin: 0 0 4px;' +
-                'padding: 5px' +
-            '}' +
-
-            '.' + classes.active + ' .' + classes.prefix + '-textarea-container {' +
-                'display: block;' +
-            '}' +
-
-            '.' + classes.prefix + '-textarea {' +
-                '-moz-box-sizing: border-box;' +
-                'box-sizing: border-box;' +
-                'border: 0;' +
-                'font-family: Consolas, monospace;' +
-                'font-size: 16px;' +
-                'min-height: 410px;' +
-                'width: 100%;' +
-            '}' +
-
-            '.' + classes.prefix + '-tab-list {' +
-                'list-style: none;' +
-                'margin: 0;' +
-                'padding: 0;' +
-                'position: absolute;' +
-                'right: 10px;' +
-                'top: 30px;' +
-            '}' +
-
-            '.' + classes.prefix + '-tab {' +
-                'display: block;' +
-                'margin-bottom: 10px;' +
-            '}' +
-
-            '.' + classes.prefix + '-tab + .' + classes.prefix + '-tab {' +
-                'margin-left: -1px;' +
-            '}' +
-
-            '.' + classes.prefix + '-tab-link {' +
-                'border: 1px solid #666;' +
-                'color: #444;' +
-                'cursor: pointer;' +
-                'display: block;' +
-                'padding: 4px 8px;' +
-                'text-align: center;' +
-                'width: 105px;' +
-            '}' +
-
-            '.' + classes.prefix + '-tab-link:hover {' +
-                'background-color: #aaa;' +
-                'color: #fff;' +
-                'text-decoration: none;' +
-            '}' +
-
-            '.' + classes.prefix + '-tab-link:active {' +
-                'background-color: #666;' +
-            '}';
-
-        elements.head = document.querySelector('head');
-        elements.head.appendChild(style);
-    }
-
     // Attach the click binding for the toggle button
     function eventBindings() {
         elements.markdown = document.querySelector('a[data-connected="markdown"]');
@@ -176,11 +89,14 @@
         // Only engage while in design (edit) mode
         if (inDesignMode) {
             appendHtml();
-            appendStyles();
             eventBindings();
         }
     };
 
-    // Wait for body load using an OOTB SharePoint object
-    _spBodyOnLoadFunctionNames.push("ME.initalise");
+    if (_spBodyOnLoadCalled) {
+        module.initalise();
+    } else {
+        // Wait for body load using an OOTB SharePoint object
+        _spBodyOnLoadFunctionNames.push("ME.initalise");
+    }
 })(window.ME = window.ME || {});
