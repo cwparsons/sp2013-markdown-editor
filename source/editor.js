@@ -6,10 +6,10 @@
             active: 'me-markdown--active',
             tabActive: 'me-markdown-tab-link--active'
         },
-        elements = {};
+        rteFields = [];
 
     // Add the textarea for Markdown, and the toggling button
-    function appendHtml() {
+    function appendHtml () {
         var html =
             '<div class="' + classes.prefix + '-textarea-container ms-rte-border-field ms-rte-border">' +
                 '<textarea class="' + classes.prefix + '-textarea"></textarea>' +
@@ -20,66 +20,112 @@
                 '</li>' +
             '</ul>';
 
-        elements.editor = document.createElement('div');
-        elements.editor.className = classes.prefix + '-editor-container';
-        elements.editor.innerHTML = html;
+        // Select all areas of the page that are rich text editors (page content
+        // or content editor web parts)
+        var fields = document.querySelectorAll('.ms-rtestate-write[contenteditable="true"]');
 
-        // TODO: Refactor to account for multiple rich text fields
-        elements.field = document.querySelector('[id*="ControlWrapper_RichHtmlField"]');
-        elements.field.className += ' ' + classes.prefix;
-        elements.field.appendChild(elements.editor);
+        for (var i = 0; i < fields.length; i++) {
+            var ancestor = findFieldAncestor(fields[i]);
+
+            if (ancestor) {
+                ancestor.className += ' ' + classes.prefix;
+
+                var editor = document.createElement('div');
+                editor.className = classes.prefix + '-editor-container';
+                editor.innerHTML = html;
+
+                ancestor.appendChild(editor);
+
+                // Save references to the field, ancestor and editor for event
+                // bindings
+                var rteField = {
+                    field: fields[i],
+                    ancestor: ancestor,
+                    textarea: editor.querySelector('.me-markdown-textarea'),
+                    button: editor.querySelector('.me-markdown-tab-link')
+                };
+
+                rteFields.push(rteField);
+
+                // Set the min-height to the textarea
+                rteField.textarea.style.minHeight = rteField.field.offsetHeight + 'px';
+            }
+        }
+    }
+
+    function findFieldAncestor (element) {
+        // If it is a page content, find one parent
+        var ancestor = findAncestor(element, 'ms-rtestate-field');
+
+        // If it is a content editor web part, the above ancestor class
+        // won't exist
+        if (!ancestor) {
+            return findAncestor(element, 'ms-webpart-chrome');
+        }
+
+        return ancestor;
+    }
+
+    function findAncestor (element, className) {
+        while ((element = element.parentElement) && !hasClass(element, className)) {
+            continue;
+        }
+
+        return element;
+    }
+
+    function hasClass (element, className) {
+        if (element && element instanceof HTMLElement) {
+            return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+        }
+
+        return false;
     }
 
     // Attach the click binding for the toggle button
-    function eventBindings() {
-        elements.markdown = document.querySelector('a[data-connected="markdown"]');
-        elements.textarea = document.querySelector('.' + classes.prefix + '-textarea');
-
-        elements.markdown.addEventListener('click', function () {
-            // Use the active CSS class for determining if we're on or not
-            if (elements.field.className.indexOf(classes.active) > -1) {
-                toggleRichText();
-            } else {
-                toggleMarkdown();
-            }
+    function eventBindings () {
+        rteFields.forEach(function (rteField) {
+            rteField.button.addEventListener('click', function () {
+                if (hasClass(rteField.ancestor, classes.active)) {
+                    toggleRichText(rteField);
+                } else {
+                    toggleMarkdown(rteField);
+                }
+            });
         });
     }
 
     // Convert the Markdown into HTML, and show it in the rich text editor field
-    function toggleRichText() {
-        elements.field.className = elements.field.className.replace(' ' + classes.active, '');
-        elements.markdown.className = elements.markdown.className.replace(' ' + classes.tabActive, '');
-
-        elements.markdown.innerText = 'Toggle Markdown';
+    function toggleRichText (rteField) {
+        rteField.ancestor.className = rteField.field.className.replace(' ' + classes.active, '');
+        rteField.button.innerText = 'Toggle Markdown';
 
         try {
-            var html = marked(elements.textarea.value);
+            var html = marked(rteField.textarea.value);
 
             if (html.length) {
-                elements.field.querySelector('.ms-rtestate-write').innerHTML = html;
+                rteField.field.innerHTML = html;
             }
         } catch (exp) {
             SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your Markdown to HTML');
-            console.log("Error while converting Markdown to HTML", exp);
+            console.log('Error while converting Markdown to HTML', exp);
         }
     }
 
     // Convert the HTML to Markdown, and show it in the rich text editor field
-    function toggleMarkdown() {
-        elements.field.className += ' ' + classes.active;
-        elements.markdown.className += ' ' + classes.tabActive;
-
-        elements.markdown.innerText = 'Toggle Rich Text';
+    function toggleMarkdown (rteField) {
+        rteField.ancestor.className += ' ' + classes.active;
+        rteField.button.innerText = 'Toggle Rich Text';
 
         try {
-            var html = elements.field.querySelector('.ms-rtestate-write').innerHTML;
+            var html = rteField.field.innerHTML;
 
             if (html.length) {
-                elements.textarea.value = toMarkdown(html);
+                rteField.textarea.value = toMarkdown(html);
             }
         } catch (exp) {
             SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your HTML to Markdown');
-            console.log("Warning: Error while converting HTML to Markdown", exp);
+            console.log('Error while converting HTML to Markdown', exp);
         }
     }
 
@@ -97,6 +143,7 @@
         module.initalise();
     } else {
         // Wait for body load using an OOTB SharePoint object
-        _spBodyOnLoadFunctionNames.push("ME.initalise");
+        _spBodyOnLoadFunctionNames.push('ME.initalise');
     }
+
 })(window.ME = window.ME || {});

@@ -2,7 +2,8 @@
     position: relative;
 }
 
-.me-markdown--active .ms-formfieldvaluecontainer {
+.me-markdown--active .ms-formfieldvaluecontainer,
+.me-markdown--active .ms-WPBody {
     display: none;
 }
 
@@ -18,7 +19,7 @@
     border-style: solid;
     border-width: 1px;
     display: none;
-    margin: 0 0 4px;
+    margin: 0;
     padding: 5px
 }
 
@@ -33,22 +34,22 @@
     border: 0;
     font-family: Consolas, monospace;
     font-size: 16px;
-    min-height: 410px;
     width: 100%;
 }
 
 .me-markdown-tab-list {
     list-style: none;
     margin: 0;
+    margin-top: 5px;
     padding: 0;
-    position: absolute;
-    right: 10px;
-    top: 30px;
+}
+
+.ms-webpart-chrome .me-markdown-tab-list {
+    margin-top: 5px;
 }
 
 .me-markdown-tab {
     display: block;
-    margin-bottom: 10px;
 }
 
 .me-markdown-tab + .me-markdown-tab {
