@@ -3,6 +3,7 @@
 }
 
 .markdown--active .ms-formfieldvaluecontainer,
+.markdown--active .ms-formfieldlabelcontainer + div,
 .markdown--active .ms-WPBody {
     display: none;
 }

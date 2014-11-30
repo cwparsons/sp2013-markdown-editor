@@ -41,8 +41,8 @@
                 var rte = {
                     field: fields[i],
                     ancestor: ancestor,
-                    textarea: editor.querySelector('.markdown-textarea'),
-                    button: editor.querySelector('.markdown-tab-link')
+                    textarea: editor.querySelector('.' + classes.prefix + '-textarea'),
+                    button: editor.querySelector('.' + classes.prefix + '-tab-link')
                 };
 
                 rtes.push(rte);
@@ -53,33 +53,12 @@
         }
     }
 
-    function findFieldAncestor (element) {
-        // If it is a page content, find one parent
-        var ancestor = findAncestor(element, 'ms-rtestate-field');
+    // Transform the HTML before going into Markdown mode
+    function cleanHtml (html) {
+        // Trim
+        html = html.trim();
 
-        // If it is a content editor web part, the above ancestor class
-        // won't exist
-        if (!ancestor) {
-            return findAncestor(element, 'ms-webpart-chrome');
-        }
-
-        return ancestor;
-    }
-
-    function findAncestor (element, className) {
-        while ((element = element.parentElement) && !hasClass(element, className)) {
-            continue;
-        }
-
-        return element;
-    }
-
-    function hasClass (element, className) {
-        if (element && element instanceof HTMLElement) {
-            return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
-        }
-
-        return false;
+        return html;
     }
 
     // Attach the click binding for the toggle button
@@ -102,6 +81,38 @@
                 saveMarkdown(rte.textarea, rte.field);
             });
         });
+    }
+
+    // Return the appropriate parent container for the rich text editor
+    function findFieldAncestor (element) {
+        // If it is a page content, find one parent
+        var ancestor = findAncestor(element, 'ms-rtestate-field');
+
+        // If it is a content editor web part, the above ancestor class
+        // won't exist
+        if (!ancestor) {
+            return findAncestor(element, 'ms-webpart-chrome');
+        }
+
+        return ancestor;
+    }
+
+    // Return the first parent node that has the given class name
+    function findAncestor (element, className) {
+        while ((element = element.parentElement) && !hasClass(element, className)) {
+            continue;
+        }
+
+        return element;
+    }
+
+    // Return true if an element has the given class name
+    function hasClass (element, className) {
+        if (element && element instanceof HTMLElement) {
+            return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+        }
+
+        return false;
     }
 
     // Convert Markdown to HTML and copy HTML content into the RTE
@@ -135,7 +146,8 @@
             var html = rte.field.innerHTML;
 
             if (html.length) {
-                rte.textarea.value = toMarkdown(html);
+                html = toMarkdown(html);
+                rte.textarea.value = cleanHtml(html);
             }
         } catch (exp) {
             SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your HTML to Markdown');
@@ -143,7 +155,7 @@
         }
     }
 
-    module.initalise = function () {
+    module.init = function () {
         var inDesignMode = document.forms[MSOWebPartPageFormName].MSOLayout_InDesignMode.value;
 
         // Only engage while in design (edit) mode
@@ -154,10 +166,10 @@
     };
 
     if (_spBodyOnLoadCalled) {
-        module.initalise();
+        module.init();
     } else {
         // Wait for body load using an OOTB SharePoint object
-        _spBodyOnLoadFunctionNames.push('MD.initalise');
+        _spBodyOnLoadFunctionNames.push('MD.init');
     }
 
 })(window.MD = window.MD || {});
