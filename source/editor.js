@@ -2,11 +2,11 @@
     'use strict';
 
     var classes = {
-            prefix: 'me-markdown',
-            active: 'me-markdown--active',
-            tabActive: 'me-markdown-tab-link--active'
+            prefix: 'markdown',
+            active: 'markdown--active',
+            tabActive: 'markdown-tab-link--active'
         },
-        rteFields = [];
+        rtes = [];
 
     // Add the textarea for Markdown, and the toggling button
     function appendHtml () {
@@ -38,17 +38,17 @@
 
                 // Save references to the field, ancestor and editor for event
                 // bindings
-                var rteField = {
+                var rte = {
                     field: fields[i],
                     ancestor: ancestor,
-                    textarea: editor.querySelector('.me-markdown-textarea'),
-                    button: editor.querySelector('.me-markdown-tab-link')
+                    textarea: editor.querySelector('.markdown-textarea'),
+                    button: editor.querySelector('.markdown-tab-link')
                 };
 
-                rteFields.push(rteField);
+                rtes.push(rte);
 
                 // Set the min-height to the textarea
-                rteField.textarea.style.minHeight = rteField.field.offsetHeight + 'px';
+                rte.textarea.style.minHeight = rte.field.offsetHeight + 'px';
             }
         }
     }
@@ -84,28 +84,42 @@
 
     // Attach the click binding for the toggle button
     function eventBindings () {
-        rteFields.forEach(function (rteField) {
-            rteField.button.addEventListener('click', function () {
-                if (hasClass(rteField.ancestor, classes.active)) {
-                    toggleRichText(rteField);
+        rtes.forEach(function (rte) {
+            // When the toggle button is clicked, switch between the two modes
+            rte.button.addEventListener('click', function () {
+                if (hasClass(rte.ancestor, classes.active)) {
+                    toggleRichText(rte);
                 } else {
-                    toggleMarkdown(rteField);
+                    toggleMarkdown(rte);
                 }
+            });
+
+            rte.textarea.addEventListener('keyup', function () {
+                saveMarkdown(rte.textarea, rte.field);
+            });
+
+            rte.textarea.addEventListener('change', function () {
+                saveMarkdown(rte.textarea, rte.field);
             });
         });
     }
 
+    // Convert Markdown to HTML and copy HTML content into the RTE
+    function saveMarkdown (textarea, field) {
+        var html = marked(textarea.value);
+
+        if (html.length) {
+            field.innerHTML = html;
+        }
+    }
+
     // Convert the Markdown into HTML, and show it in the rich text editor field
-    function toggleRichText (rteField) {
-        rteField.ancestor.className = rteField.field.className.replace(' ' + classes.active, '');
-        rteField.button.innerText = 'Toggle Markdown';
+    function toggleRichText (rte) {
+        rte.ancestor.className = rte.field.className.replace(' ' + classes.active, '');
+        rte.button.innerText = 'Toggle Markdown';
 
         try {
-            var html = marked(rteField.textarea.value);
-
-            if (html.length) {
-                rteField.field.innerHTML = html;
-            }
+            saveMarkdown(rte.textarea, rte.field);
         } catch (exp) {
             SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your Markdown to HTML');
             console.log('Error while converting Markdown to HTML', exp);
@@ -113,15 +127,15 @@
     }
 
     // Convert the HTML to Markdown, and show it in the rich text editor field
-    function toggleMarkdown (rteField) {
-        rteField.ancestor.className += ' ' + classes.active;
-        rteField.button.innerText = 'Toggle Rich Text';
+    function toggleMarkdown (rte) {
+        rte.ancestor.className += ' ' + classes.active;
+        rte.button.innerText = 'Toggle Rich Text';
 
         try {
-            var html = rteField.field.innerHTML;
+            var html = rte.field.innerHTML;
 
             if (html.length) {
-                rteField.textarea.value = toMarkdown(html);
+                rte.textarea.value = toMarkdown(html);
             }
         } catch (exp) {
             SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your HTML to Markdown');
@@ -143,7 +157,7 @@
         module.initalise();
     } else {
         // Wait for body load using an OOTB SharePoint object
-        _spBodyOnLoadFunctionNames.push('ME.initalise');
+        _spBodyOnLoadFunctionNames.push('MD.initalise');
     }
 
-})(window.ME = window.ME || {});
+})(window.MD = window.MD || {});

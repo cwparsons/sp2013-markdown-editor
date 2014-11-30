@@ -1,21 +1,21 @@
-.me-markdown{
+.markdown{
     position: relative;
 }
 
-.me-markdown--active .ms-formfieldvaluecontainer,
-.me-markdown--active .ms-WPBody {
+.markdown--active .ms-formfieldvaluecontainer,
+.markdown--active .ms-WPBody {
     display: none;
 }
 
-.me-markdown .ms-formfieldlabel:after {
+.markdown .ms-formfieldlabel:after {
     content: " (Rich Text)";
 }
 
-.me-markdown--active .ms-formfieldlabel:after {
+.markdown--active .ms-formfieldlabel:after {
     content: " (Markdown)";
 }
 
-.me-markdown-textarea-container {
+.markdown-textarea-container {
     border-style: solid;
     border-width: 1px;
     display: none;
@@ -23,40 +23,40 @@
     padding: 5px
 }
 
-.me-markdown--active .me-markdown-textarea-container {
+.markdown--active .markdown-textarea-container {
     display: block;
 }
 
-.me-markdown-textarea {
+.markdown-textarea {
     -moz-box-sizing: border-box;
          box-sizing: border-box;
 
     border: 0;
-    font-family: Consolas, monospace;
+    font-family: Consolas, Monaco, monospace;
     font-size: 16px;
     width: 100%;
 }
 
-.me-markdown-tab-list {
+.markdown-tab-list {
     list-style: none;
     margin: 0;
     margin-top: 5px;
     padding: 0;
 }
 
-.ms-webpart-chrome .me-markdown-tab-list {
+.ms-webpart-chrome .markdown-tab-list {
     margin-top: 5px;
 }
 
-.me-markdown-tab {
+.markdown-tab {
     display: block;
 }
 
-.me-markdown-tab + .me-markdown-tab {
+.markdown-tab + .markdown-tab {
     margin-left: -1px;
 }
 
-.me-markdown-tab-link {
+.markdown-tab-link {
     border: 1px solid #666;
     color: #444;
     cursor: pointer;
@@ -66,12 +66,12 @@
     width: 105px;
 }
 
-.me-markdown-tab-link:hover {
+.markdown-tab-link:hover {
     background-color: #aaa;
     color: #fff;
     text-decoration: none;
 }
 
-.me-markdown-tab-link:active {
+.markdown-tab-link:active {
     background-color: #666;
-};
+}
