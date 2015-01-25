@@ -11,30 +11,31 @@
 	// Add the textarea for Markdown, and the toggling button
 	function appendHtml () {
 		var html =
-			'<div class="' + classes.prefix + '-textarea-container ms-rte-border-field ms-rte-border">' +
-				'<textarea class="' + classes.prefix + '-textarea"></textarea>' +
-			'</div>' +
-			'<ul class="' + classes.prefix + '-tab-list">' +
+			'<ul unselectable="on" class="' + classes.prefix + '-tab-list">' +
 				'<li class="' + classes.prefix + '-tab">' +
 					'<a data-connected="markdown" class="' + classes.prefix + '-tab-link">Toggle Markdown</a>' +
 				'</li>' +
-			'</ul>';
+			'</ul>' +
+			'<div class="' + classes.prefix + '-textarea-container ms-rte-border-field ms-rte-border">' +
+				'<textarea class="' + classes.prefix + '-textarea"></textarea>' +
+			'</div>';
 
 		// Select all areas of the page that are rich text editors (page content
 		// or content editor web parts)
 		var fields = document.querySelectorAll('.ms-rtestate-write[contenteditable="true"]');
 
 		for (var i = 0; i < fields.length; i++) {
-			var ancestor = findFieldAncestor(fields[i]);
+			var wpBody = findFieldAncestor(fields[i]);
 
-			if (ancestor) {
+			if (wpBody) {
+				var ancestor = wpBody.parentNode.parentNode;
 				ancestor.className += ' ' + classes.prefix;
 
 				var editor = document.createElement('div');
 				editor.className = classes.prefix + '-editor-container';
 				editor.innerHTML = html;
 
-				ancestor.appendChild(editor);
+				wpBody.parentNode.insertBefore(editor, wpBody);
 
 				// Save references to the field, ancestor and editor for event
 				// bindings
@@ -46,9 +47,6 @@
 				};
 
 				rtes.push(rte);
-
-				// Set the min-height to the textarea
-				rte.textarea.style.minHeight = rte.field.offsetHeight + 'px';
 			}
 		}
 	}
@@ -86,12 +84,12 @@
 	// Return the appropriate parent container for the rich text editor
 	function findFieldAncestor (element) {
 		// If it is a page content, find one parent
-		var ancestor = findAncestor(element, 'ms-rtestate-field');
+		var ancestor = findAncestor(element, 'ms-WPBody');
 
 		// If it is a content editor web part, the above ancestor class
 		// won't exist
 		if (!ancestor) {
-			return findAncestor(element, 'ms-webpart-chrome');
+			return findAncestor(element, 'ms-formfieldvaluecontainer');
 		}
 
 		return ancestor;
@@ -126,7 +124,7 @@
 
 	// Convert the Markdown into HTML, and show it in the rich text editor field
 	function toggleRichText (rte) {
-		rte.ancestor.className = rte.field.className.replace(' ' + classes.active, '');
+		rte.ancestor.className = rte.ancestor.className.replace(' ' + classes.active, '');
 		rte.button.innerText = 'Toggle Markdown';
 
 		try {
@@ -139,15 +137,19 @@
 
 	// Convert the HTML to Markdown, and show it in the rich text editor field
 	function toggleMarkdown (rte) {
-		rte.ancestor.className += ' ' + classes.active;
-		rte.button.innerText = 'Toggle Rich Text';
-
 		try {
 			var html = rte.field.innerHTML;
 
 			if (html.length) {
 				html = toMarkdown(html);
 				rte.textarea.value = cleanHtml(html);
+
+				// Set the min-height to the textarea
+				var minHeight = rte.field.offsetHeight > 150 ? rte.field.offsetHeight : 150;
+				rte.textarea.style.minHeight = minHeight + 'px';
+
+				rte.ancestor.className += ' ' + classes.active;
+				rte.button.innerText = 'Toggle Rich Text';
 			}
 		} catch (exp) {
 			SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your HTML to Markdown');
@@ -169,7 +171,7 @@
 		module.init();
 	} else {
 		// Wait for body load using an OOTB SharePoint object
-		_spBodyOnLoadFunctionNames.push('MD.init');
+		_spBodyOnLoadFunctionNames.push('SPMD.init');
 	}
 
-})(window.MD = window.MD || {});
+})(window.SPMD = window.SPMD || {});

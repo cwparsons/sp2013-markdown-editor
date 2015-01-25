@@ -1,10 +1,10 @@
-.markdown{
+.markdown {
     position: relative;
 }
 
 .markdown--active .ms-formfieldvaluecontainer,
-.markdown--active .ms-formfieldlabelcontainer + div,
-.markdown--active .ms-WPBody {
+.markdown--active .ms-WPBody,
+.markdown--active > [id*="WebPart"][webpartid] {
     display: none;
 }
 
@@ -35,12 +35,14 @@
     border: 0;
     font-family: Consolas, Monaco, monospace;
     font-size: 16px;
+    max-width: 100%;
     width: 100%;
 }
 
 .markdown-tab-list {
     list-style: none;
     margin: 0;
+    margin-bottom: 10px;
     margin-top: 5px;
     padding: 0;
 }
@@ -58,21 +60,27 @@
 }
 
 .markdown-tab-link {
-    border: 1px solid #666;
-    color: #444;
+    border: 1px solid #d6d6d6;
+    color: #23272c;
     cursor: pointer;
     display: block;
     padding: 4px 8px;
     text-align: center;
+    text-decoration: none !important;
     width: 105px;
 }
 
 .markdown-tab-link:hover {
-    background-color: #aaa;
-    color: #fff;
+    background-color: #f4f4f4;
+    border: 1px solid #92b7d1;
     text-decoration: none;
 }
 
 .markdown-tab-link:active {
-    background-color: #666;
+    background-color: #92b7d1;
+}
+
+.markdown-tab span,
+.markdown-tab br {
+    display: none;
 }
