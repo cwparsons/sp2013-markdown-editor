@@ -6,6 +6,7 @@
 			active: 'markdown--active',
 			tabActive: 'markdown-tab-link--active'
 		},
+		md,
 		rtes = [];
 
 	// Add the textarea for Markdown, and the toggling button
@@ -13,7 +14,12 @@
 		var html =
 			'<ul unselectable="on" class="' + classes.prefix + '-tab-list">' +
 				'<li class="' + classes.prefix + '-tab">' +
-					'<a data-connected="markdown" class="' + classes.prefix + '-tab-link">Toggle Markdown</a>' +
+					'<a data-connected="markdown" class="' + classes.prefix + '-tab-link">' +
+						'<span class="ms-cui-img-16by16 ms-cui-img-cont-float ms-cui-imageDisabled" unselectable="on">' +
+							'<img style="top: -269px; left: -37px;" src="/_layouts/15/1033/images/formatmap16x16.png">' +
+						'</span>' +
+						'<span class="ms-cui-ctl-mediumlabel">Toggle Markdown</span>' +
+					'</a>' +
 				'</li>' +
 			'</ul>' +
 			'<div class="' + classes.prefix + '-textarea-container ms-rte-border-field ms-rte-border">' +
@@ -115,7 +121,11 @@
 
 	// Convert Markdown to HTML and copy HTML content into the RTE
 	function saveMarkdown (textarea, field) {
-		var html = marked(textarea.value);
+		if (typeof (md) === 'undefined') {
+			md = window.markdownit();
+		}
+
+		var html = md.render(textarea.value);
 
 		if (html.length) {
 			field.innerHTML = html;
@@ -125,7 +135,7 @@
 	// Convert the Markdown into HTML, and show it in the rich text editor field
 	function toggleRichText (rte) {
 		rte.ancestor.className = rte.ancestor.className.replace(' ' + classes.active, '');
-		rte.button.innerText = 'Toggle Markdown';
+		rte.button.querySelector('.ms-cui-ctl-mediumlabel').innerText = 'Toggle Markdown';
 
 		try {
 			saveMarkdown(rte.textarea, rte.field);
@@ -149,7 +159,7 @@
 				rte.textarea.style.minHeight = minHeight + 'px';
 
 				rte.ancestor.className += ' ' + classes.active;
-				rte.button.innerText = 'Toggle Rich Text';
+				rte.button.querySelector('.ms-cui-ctl-mediumlabel').innerText = 'Toggle Rich Text';
 			}
 		} catch (exp) {
 			SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your HTML to Markdown');

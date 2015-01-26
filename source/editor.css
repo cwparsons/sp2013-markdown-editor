@@ -1,86 +1,95 @@
 .markdown {
-    position: relative;
+	position: relative;
 }
 
 .markdown--active .ms-formfieldvaluecontainer,
 .markdown--active .ms-WPBody,
 .markdown--active > [id*="WebPart"][webpartid] {
-    display: none;
+	display: none;
 }
 
 .markdown .ms-formfieldlabel:after {
-    content: " (Rich Text)";
+	content: " (Rich Text)";
 }
 
 .markdown--active .ms-formfieldlabel:after {
-    content: " (Markdown)";
+	content: " (Markdown)";
 }
 
 .markdown-textarea-container {
-    border-style: solid;
-    border-width: 1px;
-    display: none;
-    margin: 0;
-    padding: 5px
+	border-style: solid;
+	border-width: 1px;
+	display: none;
+	margin: 0;
+	padding: 5px
 }
 
 .markdown--active .markdown-textarea-container {
-    display: block;
+	display: block;
 }
 
 .markdown-textarea {
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
+	-moz-box-sizing: border-box;
+		 box-sizing: border-box;
 
-    border: 0;
-    font-family: Consolas, Monaco, monospace;
-    font-size: 16px;
-    max-width: 100%;
-    width: 100%;
+	border: 0;
+	font-family: Consolas, Monaco, monospace;
+	font-size: 16px;
+	max-width: 100%;
+	width: 100%;
 }
 
 .markdown-tab-list {
-    list-style: none;
-    margin: 0;
-    margin-bottom: 10px;
-    margin-top: 5px;
-    padding: 0;
+	list-style: none;
+	margin: 0;
+	margin-bottom: 10px;
+	margin-top: 5px;
+	padding: 0;
 }
 
 .ms-webpart-chrome .markdown-tab-list {
-    margin-top: 5px;
+	margin-top: 5px;
 }
 
 .markdown-tab {
-    display: block;
+	display: block;
 }
 
 .markdown-tab + .markdown-tab {
-    margin-left: -1px;
+	margin-left: -1px;
 }
 
 .markdown-tab-link {
-    border: 1px solid #d6d6d6;
-    color: #23272c;
-    cursor: pointer;
-    display: block;
-    padding: 4px 8px;
-    text-align: center;
-    text-decoration: none !important;
-    width: 105px;
+	border: 1px solid #d6d6d6;
+	color: #23272c;
+	cursor: pointer;
+	display: block;
+	padding: 4px;
+	position: relative;
+	text-align: center;
+	text-decoration: none !important;
+	width: 125px;
 }
 
 .markdown-tab-link:hover {
-    background-color: #f4f4f4;
-    border: 1px solid #92b7d1;
-    text-decoration: none;
+	background-color: #f4f4f4;
+	border: 1px solid #92b7d1;
+	text-decoration: none;
 }
 
 .markdown-tab-link:active {
-    background-color: #92b7d1;
+	background-color: #92b7d1;
 }
 
-.markdown-tab span,
+.markdown-tab-link .ms-cui-img-16by16 {
+	display: block;
+	float: left;
+}
+
+.markdown-tab-link img {
+	max-width: none !important;
+}
+
 .markdown-tab br {
-    display: none;
+	display: none;
 }
