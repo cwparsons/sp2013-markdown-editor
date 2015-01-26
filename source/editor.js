@@ -12,13 +12,21 @@
 	// Add the textarea for Markdown, and the toggling button
 	function appendHtml () {
 		var html =
-			'<ul unselectable="on" class="' + classes.prefix + '-tab-list">' +
+			'<ul class="' + classes.prefix + '-tab-list">' +
 				'<li class="' + classes.prefix + '-tab">' +
-					'<a data-connected="markdown" class="' + classes.prefix + '-tab-link">' +
+					'<a class="' + classes.prefix + '-tab-link">' +
 						'<span class="ms-cui-img-16by16 ms-cui-img-cont-float ms-cui-imageDisabled" unselectable="on">' +
 							'<img style="top: -269px; left: -37px;" src="/_layouts/15/1033/images/formatmap16x16.png">' +
 						'</span>' +
 						'<span class="ms-cui-ctl-mediumlabel">Toggle Markdown</span>' +
+					'</a>' +
+				'</li>' +
+				'<li class="' + classes.prefix + '-tab ' + classes.prefix + '-tab--fullscreen">' +
+					'<a class="' + classes.prefix + '-tab-link">' +
+						'<span class="ms-cui-img-16by16 ms-cui-img-cont-float ms-cui-imageDisabled" unselectable="on">' +
+							'<img style="top: -236px; left: -271px;" src="/_layouts/15/1033/images/formatmap16x16.png">' +
+						'</span>' +
+						'<span class="ms-cui-ctl-mediumlabel">Full Screen</span>' +
 					'</a>' +
 				'</li>' +
 			'</ul>' +
@@ -40,6 +48,7 @@
 				var editor = document.createElement('div');
 				editor.className = classes.prefix + '-editor-container';
 				editor.innerHTML = html;
+				editor.setAttribute('unselectable', 'on');
 
 				wpBody.parentNode.insertBefore(editor, wpBody);
 
@@ -49,7 +58,8 @@
 					field: fields[i],
 					ancestor: ancestor,
 					textarea: editor.querySelector('.' + classes.prefix + '-textarea'),
-					button: editor.querySelector('.' + classes.prefix + '-tab-link')
+					button: editor.querySelector('.' + classes.prefix + '-tab-link'),
+					fullscreen: editor.querySelector('.' + classes.prefix + '-tab--fullscreen a')
 				};
 
 				rtes.push(rte);
@@ -61,6 +71,10 @@
 	function cleanHtml (html) {
 		// Trim
 		html = html.trim();
+
+		// Remove RTE range cursor elements
+		html = html.replace('&lt;span id="ms-rterangecursor-start" rtenodeid="1"&gt;&lt;/span&gt;', '');
+		html = html.replace('&lt;span id="ms-rterangecursor-end"&gt;&lt;/span&gt;', '');
 
 		return html;
 	}
@@ -75,6 +89,10 @@
 				} else {
 					toggleMarkdown(rte);
 				}
+			});
+
+			rte.fullscreen.addEventListener('click', function () {
+				toggleFullscreen(rte);
 			});
 
 			rte.textarea.addEventListener('keyup', function () {
@@ -133,16 +151,40 @@
 	}
 
 	// Convert the Markdown into HTML, and show it in the rich text editor field
-	function toggleRichText (rte) {
-		rte.ancestor.className = rte.ancestor.className.replace(' ' + classes.active, '');
-		rte.button.querySelector('.ms-cui-ctl-mediumlabel').innerText = 'Toggle Markdown';
+	function toggleFullscreen (rte) {
+		var html = '<div class="ms-input-divAroundTextArea ms-fullWidth">' +
+				'<textarea id="markdowndialog_textarea" class="markdown-textarea">' +
+					rte.textarea.value +
+				'</textarea>' +
+			'</div>' +
+			'<div class="ms-core-form-bottomButtonBox">' +
+				'<input type="button" value="OK" class="ms-ButtonHeightWidth" id="markdowndialog_okbutton">' +
+				'<input type="button" value="Cancel" class="ms-ButtonHeightWidth" id="markdowndialog_cancelbutton">' +
+			'</div>';
 
-		try {
-			saveMarkdown(rte.textarea, rte.field);
-		} catch (exp) {
-			SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your Markdown to HTML');
-			console.log('Error while converting Markdown to HTML', exp);
-		}
+		var element = document.createElement('div');
+		element.className = 'markdown-modal';
+		element.innerHTML = html;
+
+		SP.SOD.loadMultiple(['sp.ui.dialog.js'], function () {
+			SP.UI.ModalDialog.showModalDialog({
+				allowMaximize: true,
+				height: window.innerHeight - 15,
+				html: element,
+				showClose: true,
+				title: 'Markdown Editor',
+				width: 960
+			});
+
+			document.querySelector('#markdowndialog_okbutton').addEventListener('click', function () {
+				rte.textarea.value = document.querySelector('#markdowndialog_textarea').value;
+				SP.UI.ModalDialog.commonModalDialogClose(SP.UI.DialogResult.OK);
+			});
+
+			document.querySelector('#markdowndialog_cancelbutton').addEventListener('click', function () {
+				SP.UI.ModalDialog.commonModalDialogClose(SP.UI.DialogResult.cancel);
+			});
+		});
 	}
 
 	// Convert the HTML to Markdown, and show it in the rich text editor field
@@ -164,6 +206,19 @@
 		} catch (exp) {
 			SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your HTML to Markdown');
 			console.log('Error while converting HTML to Markdown', exp);
+		}
+	}
+
+	// Convert the Markdown into HTML, and show it in the rich text editor field
+	function toggleRichText (rte) {
+		rte.ancestor.className = rte.ancestor.className.replace(' ' + classes.active, '');
+		rte.button.querySelector('.ms-cui-ctl-mediumlabel').innerText = 'Toggle Markdown';
+
+		try {
+			saveMarkdown(rte.textarea, rte.field);
+		} catch (exp) {
+			SP.UI.Notify.addNotification('<strong>Warning:</strong> There was an error while converting your Markdown to HTML');
+			console.log('Error while converting Markdown to HTML', exp);
 		}
 	}
 

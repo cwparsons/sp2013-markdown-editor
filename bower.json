@@ -15,7 +15,7 @@
     "sources": {
       "he": "bower_components/he/he.js",
       "to-markdown": "bower_components/to-markdown/src/to-markdown.js",
-      "markdown-it": "bower_components/markdown-it/dist/markdown-it.js"
+      "markdown-it": "bower_components/markdown-it/dist/markdown-it.min.js"
     }
   }
 }

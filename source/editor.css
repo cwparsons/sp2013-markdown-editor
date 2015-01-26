@@ -16,6 +16,9 @@
 	content: " (Markdown)";
 }
 
+
+/* Textarea */
+
 .markdown-textarea-container {
 	border-style: solid;
 	border-width: 1px;
@@ -35,28 +38,39 @@
 	border: 0;
 	font-family: Consolas, Monaco, monospace;
 	font-size: 16px;
-	max-width: 100%;
 	width: 100%;
 }
+
+.ms-dlgContent .markdown-textarea {
+	height: 100%;
+}
+
+
+/* Tabs */
 
 .markdown-tab-list {
 	list-style: none;
 	margin: 0;
 	margin-bottom: 10px;
-	margin-top: 5px;
 	padding: 0;
 }
 
-.ms-webpart-chrome .markdown-tab-list {
+.markdown-tab {
+	display: inline-block;
+	margin-right: 5px;
 	margin-top: 5px;
 }
 
-.markdown-tab {
-	display: block;
+.markdown-tab:last-child {
+	margin-right: 0;
 }
 
-.markdown-tab + .markdown-tab {
-	margin-left: -1px;
+.markdown-tab--fullscreen {
+	display: none;
+}
+
+.markdown--active .markdown-tab--fullscreen {
+	display: inline-block;
 }
 
 .markdown-tab-link {
@@ -64,11 +78,11 @@
 	color: #23272c;
 	cursor: pointer;
 	display: block;
+	font-size: 12px;
 	padding: 4px;
 	position: relative;
 	text-align: center;
 	text-decoration: none !important;
-	width: 125px;
 }
 
 .markdown-tab-link:hover {
@@ -86,10 +100,25 @@
 	float: left;
 }
 
+.markdown-tab-link .ms-cui-ctl-mediumlabel {
+	margin-left: 6px;
+}
+
 .markdown-tab-link img {
 	max-width: none !important;
 }
 
 .markdown-tab br {
 	display: none;
+}
+
+
+/* Modal */
+
+.markdown-modal {
+	height: 100%;
+}
+
+.markdown-modal .ms-input-divAroundTextArea {
+	height: calc(100% - 51px);
 }
