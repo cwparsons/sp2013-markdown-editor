@@ -17,8 +17,7 @@ module.exports = function (grunt) {
 	 */
 	var taskConfig = {
 		dirs: {
-			// build: 'build',
-			build: 'D:\\Documents\\TFS\\Habanero.StarterKit\\Main\\Source\\SPArtifacts\\Style Library\\Scripts\\SK\\vendor',
+			build: 'build',
 			source: 'source',
 			tmp: '.grunt',
 			vendor: '<%= dirs.source %>/vendor'
@@ -172,7 +171,7 @@ module.exports = function (grunt) {
 	]);
 
 	grunt.registerTask('build', [
-		'clean:temp', 'jshint', 'jscs', 'cssmin', 'css2js', 'uglify', 'concat', 'clean:temp'
+		'clean', 'jshint', 'jscs', 'cssmin', 'css2js', 'uglify', 'concat', 'clean:temp'
 	]);
 
 	grunt.registerTask('serve', [
