@@ -4,7 +4,7 @@
  * Licensed under MIT
  */
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 	'use strict';
 
 	/**
@@ -17,7 +17,8 @@ module.exports = function(grunt) {
 	 */
 	var taskConfig = {
 		dirs: {
-			build: 'build',
+			// build: 'build',
+			build: 'D:\\Documents\\TFS\\Habanero.StarterKit\\Main\\Source\\SPArtifacts\\Style Library\\Scripts\\SK\\vendor',
 			source: 'source',
 			tmp: '.grunt',
 			vendor: '<%= dirs.source %>/vendor'
@@ -116,8 +117,7 @@ module.exports = function(grunt) {
 						expand: true,
 						cwd: '<%= dirs.source %>',
 						src: [
-							'**/*.js',
-							'!**/*.min.js'
+							'**/*.js'
 						],
 						dest: '<%= dirs.tmp %>/',
 						ext: '.js'
@@ -172,7 +172,7 @@ module.exports = function(grunt) {
 	]);
 
 	grunt.registerTask('build', [
-		'clean', 'jshint', 'jscs', 'cssmin', 'css2js', 'uglify', 'concat', 'clean:temp'
+		'clean:temp', 'jshint', 'jscs', 'cssmin', 'css2js', 'uglify', 'concat', 'clean:temp'
 	]);
 
 	grunt.registerTask('serve', [

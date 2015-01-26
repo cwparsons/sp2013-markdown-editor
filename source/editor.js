@@ -189,6 +189,7 @@
 
 			document.querySelector('#markdowndialog_okbutton').addEventListener('click', function () {
 				rte.textarea.value = document.querySelector('#markdowndialog_textarea').value;
+				saveMarkdown(rte.textarea, rte.field);
 				SP.UI.ModalDialog.commonModalDialogClose(SP.UI.DialogResult.OK);
 			});
 
