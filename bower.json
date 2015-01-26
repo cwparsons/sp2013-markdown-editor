@@ -8,14 +8,14 @@
   "private": true,
   "dependencies": {
     "to-markdown": "~0.0.3",
-    "markdown-it": "~3.0.4"
+    "marked": "~0.3.2"
   },
   "install": {
     "path": "source/vendor",
     "sources": {
       "he": "bower_components/he/he.js",
       "to-markdown": "bower_components/to-markdown/src/to-markdown.js",
-      "markdown-it": "bower_components/markdown-it/dist/markdown-it.min.js"
+      "marked": "bower_components/marked/marked.min.js"
     }
   }
 }

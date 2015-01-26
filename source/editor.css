@@ -2,26 +2,17 @@
 	position: relative;
 }
 
+.markdown .ms-formfieldlabelcontainer,
 .markdown--active .ms-formfieldvaluecontainer,
 .markdown--active .ms-WPBody,
 .markdown--active > [id*="WebPart"][webpartid] {
 	display: none;
 }
 
-.markdown .ms-formfieldlabel:after {
-	content: " (Rich Text)";
-}
-
-.markdown--active .ms-formfieldlabel:after {
-	content: " (Markdown)";
-}
-
-
 /* Textarea */
 
 .markdown-textarea-container {
-	border-style: solid;
-	border-width: 1px;
+	border: 1px solid #bababa;
 	display: none;
 	margin: 0;
 	padding: 5px

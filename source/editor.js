@@ -6,7 +6,6 @@
 			active: 'markdown--active',
 			tabActive: 'markdown-tab-link--active'
 		},
-		md,
 		rtes = [];
 
 	// Add the textarea for Markdown, and the toggling button
@@ -15,7 +14,7 @@
 			'<ul class="' + classes.prefix + '-tab-list">' +
 				'<li class="' + classes.prefix + '-tab">' +
 					'<a class="' + classes.prefix + '-tab-link">' +
-						'<span class="ms-cui-img-16by16 ms-cui-img-cont-float ms-cui-imageDisabled" unselectable="on">' +
+						'<span class="ms-cui-img-16by16 ms-cui-img-cont-float ms-cui-imageDisabled">' +
 							'<img style="top: -269px; left: -37px;" src="/_layouts/15/1033/images/formatmap16x16.png">' +
 						'</span>' +
 						'<span class="ms-cui-ctl-mediumlabel">Toggle Markdown</span>' +
@@ -23,14 +22,14 @@
 				'</li>' +
 				'<li class="' + classes.prefix + '-tab ' + classes.prefix + '-tab--fullscreen">' +
 					'<a class="' + classes.prefix + '-tab-link">' +
-						'<span class="ms-cui-img-16by16 ms-cui-img-cont-float ms-cui-imageDisabled" unselectable="on">' +
+						'<span class="ms-cui-img-16by16 ms-cui-img-cont-float ms-cui-imageDisabled">' +
 							'<img style="top: -236px; left: -271px;" src="/_layouts/15/1033/images/formatmap16x16.png">' +
 						'</span>' +
 						'<span class="ms-cui-ctl-mediumlabel">Full Screen</span>' +
 					'</a>' +
 				'</li>' +
 			'</ul>' +
-			'<div class="' + classes.prefix + '-textarea-container ms-rte-border-field ms-rte-border">' +
+			'<div class="' + classes.prefix + '-textarea-container">' +
 				'<textarea class="' + classes.prefix + '-textarea"></textarea>' +
 			'</div>';
 
@@ -48,7 +47,6 @@
 				var editor = document.createElement('div');
 				editor.className = classes.prefix + '-editor-container';
 				editor.innerHTML = html;
-				editor.setAttribute('unselectable', 'on');
 
 				wpBody.parentNode.insertBefore(editor, wpBody);
 
@@ -68,13 +66,26 @@
 	}
 
 	// Transform the HTML before going into Markdown mode
-	function cleanHtml (html) {
+	function cleanHtml (field) {
+		var selectors = [
+			'#ms-rterangecursor-start',
+			'#ms-rterangecursor-end'
+		];
+
+		// Loop through all selectors
+		for (var i = 0; i < selectors.length; i++) {
+			var elements = field.querySelectorAll(selectors[i]);
+
+			for (var j = 0; j < elements.length; j++) {
+				elements[j].remove();
+			}
+		}
+	}
+
+	// Transform the HTML string before going into Markdown mode
+	function cleanHtmlString (html) {
 		// Trim
 		html = html.trim();
-
-		// Remove RTE range cursor elements
-		html = html.replace('&lt;span id="ms-rterangecursor-start" rtenodeid="1"&gt;&lt;/span&gt;', '');
-		html = html.replace('&lt;span id="ms-rterangecursor-end"&gt;&lt;/span&gt;', '');
 
 		return html;
 	}
@@ -113,7 +124,7 @@
 		// If it is a content editor web part, the above ancestor class
 		// won't exist
 		if (!ancestor) {
-			return findAncestor(element, 'ms-formfieldvaluecontainer');
+			return findAncestor(element, 'ms-rtestate-field');
 		}
 
 		return ancestor;
@@ -139,11 +150,11 @@
 
 	// Convert Markdown to HTML and copy HTML content into the RTE
 	function saveMarkdown (textarea, field) {
-		if (typeof (md) === 'undefined') {
-			md = window.markdownit();
-		}
+		var options = {
+			smartLists: true
+		};
 
-		var html = md.render(textarea.value);
+		var html = marked(textarea.value, options);
 
 		if (html.length) {
 			field.innerHTML = html;
@@ -190,11 +201,12 @@
 	// Convert the HTML to Markdown, and show it in the rich text editor field
 	function toggleMarkdown (rte) {
 		try {
+			cleanHtml(rte.field);
 			var html = rte.field.innerHTML;
 
 			if (html.length) {
 				html = toMarkdown(html);
-				rte.textarea.value = cleanHtml(html);
+				rte.textarea.value = cleanHtmlString(html);
 
 				// Set the min-height to the textarea
 				var minHeight = rte.field.offsetHeight > 150 ? rte.field.offsetHeight : 150;
